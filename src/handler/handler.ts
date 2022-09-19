@@ -44,6 +44,11 @@ export default async (client: Client) => {
         e.default.listener(client, ...args)
       );
     }
+
+    // client.on("post", async (post) => {
+    //   console.log()
+    //   const usChannel =
+    // })
   } catch (err) {
     console.error(err);
   }

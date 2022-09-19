@@ -5,7 +5,9 @@ import config from "../config/config";
 
 export default new ClientEvent("ready", async (client) => {
   console.clear();
-  console.log(`${client.user?.username} is online!`);
+  console.log(
+    `${client.user?.username}#${client.user?.discriminator} is online!`
+  );
 
   new setPresence(client, [
     {

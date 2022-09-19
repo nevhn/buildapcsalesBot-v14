@@ -3,13 +3,12 @@ import { CommandBuilder } from "../../../components/CommandBuilder";
 export default new CommandBuilder({
   data: {
     name: "ping",
-    alias: [],
+    alias: ["p"],
     description: "Send a ping request.",
   },
   async run(client, message, args) {
     try {
-      let msg = await message.reply({ content: "Pong!" });
-      await msg.reply({
+      await message.reply({
         content: `Latency: ${client.ws.ping}ms\nBot Latency: ${
           Date.now() - message.createdTimestamp
         }ms`,
