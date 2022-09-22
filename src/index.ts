@@ -13,10 +13,10 @@ import config from "./config/config";
 import handler from "./handler/handler";
 
 const commands = new Collection();
-const slashs = new Collection();
+const slashes = new Collection();
 
 handler(client);
 
 client.login(config.token);
 
-export { commands, slashs };
+export { commands, slashes };

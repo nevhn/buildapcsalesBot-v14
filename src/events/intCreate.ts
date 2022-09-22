@@ -1,12 +1,12 @@
 import ClientEvent from "../components/ClientEvent";
-import { slashs } from "../index";
+import { slashes } from "../index";
 import { SlashCmd } from "../types/SlashStructure";
 
 export default new ClientEvent("interactionCreate", async (client, int) => {
   if (!int.isChatInputCommand()) return;
 
   //@ts-ignore
-  const command: SlashCmd = slashs.get(int.commandName);
+  const command: SlashCmd = slashes.get(int.commandName);
 
   try {
     if (!command) {

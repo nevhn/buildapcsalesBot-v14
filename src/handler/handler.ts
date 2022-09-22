@@ -1,6 +1,6 @@
 import { Command, SlashCommand } from "../types/Collections";
 import { readdir } from "node:fs/promises";
-import { commands, slashs } from "..";
+import { commands, slashes } from "..";
 import { Client } from "discord.js";
 import { join } from "node:path";
 
@@ -31,7 +31,7 @@ export default async (client: Client) => {
 
       for (const file of folder) {
         const command = await import(`../commands/slash/${folders}/${file}`);
-        slashs.set(command.default.data.name, command.default);
+        slashes.set(command.default.data.name, command.default);
       }
     }
 
@@ -44,11 +44,6 @@ export default async (client: Client) => {
         e.default.listener(client, ...args)
       );
     }
-
-    // client.on("post", async (post) => {
-    //   console.log()
-    //   const usChannel =
-    // })
   } catch (err) {
     console.error(err);
   }
