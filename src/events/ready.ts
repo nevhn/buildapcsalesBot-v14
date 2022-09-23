@@ -3,9 +3,10 @@ import ClientEvent from "../components/ClientEvent";
 import { ActivityType } from "discord.js";
 import config from "../config/config";
 import { Post } from "../components/Post";
+import cron from "node-cron";
 
 export default new ClientEvent("ready", async (client) => {
-  // console.clear();
+  console.clear();
   console.log(
     `${client.user?.username}#${client.user?.discriminator} is online!`
   );
@@ -34,14 +35,20 @@ export default new ClientEvent("ready", async (client) => {
 
   const fetchPost = async () => {
     try {
-      const post = new Post("usa");
-      const response = await post.getPost();
-      client.emit("post", response);
-      // console.log(response.subreddit);
+      console.log("...fetching posts");
+      const p1 = new Post("usa");
+      const p2 = new Post("uk");
+
+      const usPost = await p1.getPost();
+      const ukPost = await p2.getPost();
+
+      client.emit("post", usPost);
+      client.emit("post", ukPost);
     } catch (err) {
       console.error(err);
     }
   };
 
-  await fetchPost();
+  cron.schedule("* * * * *", () => fetchPost());
+  // await fetchPost();
 });
