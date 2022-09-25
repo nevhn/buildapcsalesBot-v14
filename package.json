@@ -7,15 +7,17 @@
     "start": "node dist",
     "build": "tsc",
     "slash": "node dist/builder.js",
-    "dev": "nodemon -e ts,js,json --exec \"npm run build && npm run slash && npm start\" --ignore dist"
+    "dev": "nodemon -e ts,js,json --exec \"npm run build && npm run slash && npm start\" --ignore dist --ignore *.json"
   },
   "dependencies": {
     "@discordjs/rest": "^1.1.0",
     "axios": "^0.27.2",
     "discord.js": "^14.3.0",
+    "fs-extra": "^10.1.0",
     "node-cron": "^3.0.2"
   },
   "devDependencies": {
+    "@types/fs-extra": "^9.0.13",
     "@types/node-cron": "^3.0.4",
     "dotenv": "^16.0.2",
     "nodemon": "^2.0.19",

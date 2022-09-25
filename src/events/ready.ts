@@ -4,6 +4,7 @@ import { ActivityType } from "discord.js";
 import config from "../config/config";
 import { Post } from "../components/Post";
 import cron from "node-cron";
+import fs from "fs-extra";
 
 export default new ClientEvent("ready", async (client) => {
   console.clear();
@@ -35,20 +36,44 @@ export default new ClientEvent("ready", async (client) => {
 
   const fetchPost = async () => {
     try {
-      console.log("...fetching posts");
-      const p1 = new Post("usa");
-      const p2 = new Post("uk");
+      let newUsPost = false;
+      let newUkPost = false;
+      const post1 = new Post("usa");
+      const post2 = new Post("uk");
 
-      const usPost = await p1.getPost();
-      const ukPost = await p2.getPost();
+      const usPost = await post1.getPost();
+      const ukPost = await post2.getPost();
 
-      client.emit("post", usPost);
-      client.emit("post", ukPost);
+      const file = "dist/config/previousPostIds.json";
+      const previousPosts = await fs.readJSON(file);
+
+      if (!previousPosts.ids.length) {
+        previousPosts.ids.push(usPost.id);
+        previousPosts.ids.push(ukPost.id);
+        await fs.writeJSON(file, previousPosts);
+        console.log(previousPosts);
+        newUsPost = true;
+        newUkPost = true;
+      }
+
+      // replace new id
+      if (previousPosts.ids[0] != usPost.id) {
+        previousPosts.ids[0] = usPost.id;
+        newUsPost = true;
+      }
+
+      if (previousPosts.ids[1] != ukPost.id) {
+        previousPosts.ids[1] = ukPost.id;
+        newUkPost = true;
+      }
+
+      client.emit("post", usPost, newUsPost);
+      client.emit("post", ukPost, newUkPost);
     } catch (err) {
       console.error(err);
     }
   };
 
-  cron.schedule("* * * * *", () => fetchPost());
-  // await fetchPost();
+  cron.schedule("* * * * *", async () => await fetchPost());
+  // fetchPost();
 });

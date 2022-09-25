@@ -5,42 +5,52 @@ import { EmbedBuilder } from "discord.js";
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import config from "../config/config";
 
-//@ts-ignore
-export default new ClientEvent("post", async (client, post: Response) => {
-  try {
-    let channelId = "";
-    if (post.subreddit === "buildapcsales")
-      channelId = config.usChannelId as string;
-    else channelId = config.ukChannelId as string;
+export default new ClientEvent(
+  //@ts-ignore
+  "post",
+  async (client, post: Response, newPost: Boolean) => {
+    try {
+      console.log(newPost);
+      // const milliseconds = post.created * 1000;
+      // const created = new Date(milliseconds).toString();
+      // const fields: APIEmbedField[] = [{ name: post.title, value: post.postUrl }];
+      let channelId = "";
 
-    console.log(post);
-    const channel = client.channels.cache.get(channelId) as TextChannel;
+      if (!newPost) return;
 
-    // const milliseconds = post.created * 1000;
-    // const created = new Date(milliseconds).toString();
+      if (post.subreddit === "buildapcsales")
+        channelId = config.usChannelId as string;
+      else channelId = config.ukChannelId as string;
 
-    // const fields: APIEmbedField[] = [{ name: post.title, value: post.postUrl }];
-    const embed = new EmbedBuilder().setTitle(post.title).setColor("Random");
+      const channel = client.channels.cache.get(channelId) as TextChannel;
 
-    const row = new ActionRowBuilder<ButtonBuilder>()
-      .addComponents(
-        new ButtonBuilder()
-          .setLabel("Reddit")
-          .setURL(post.postUrl)
-          .setStyle(ButtonStyle.Link)
-      )
-      .addComponents(
-        new ButtonBuilder()
-          .setLabel("Buy")
-          .setURL(post.buyUrl)
-          .setStyle(ButtonStyle.Link)
-      );
+      const embed = new EmbedBuilder().setTitle(post.title).setColor("Random");
+      const row = new ActionRowBuilder<ButtonBuilder>()
+        .addComponents(
+          new ButtonBuilder()
+            .setLabel("Reddit")
+            .setURL(post.postUrl)
+            .setStyle(ButtonStyle.Link)
+        )
+        .addComponents(
+          new ButtonBuilder()
+            .setLabel("Buy")
+            .setURL(post.buyUrl)
+            .setStyle(ButtonStyle.Link)
+        );
 
-    await channel?.send({
-      embeds: [embed],
-      components: [row],
-    });
-  } catch (err) {
-    console.error(err);
+      await channel?.send({
+        embeds: [embed],
+        components: [row],
+      });
+      console.log(post);
+    } catch (err) {
+      console.error(err);
+    }
   }
-});
+);
+
+// const savePostId = async (file: any, id: any, path: any) => {
+//   await file.ids.push(id);
+//   await fs.writeFile(file);
+// };
