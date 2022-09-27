@@ -21,7 +21,6 @@ export class Post {
 
   public async getPost(): Promise<Response> {
     const baseUrl = "https://reddit.com";
-
     const post = await axios.get(this.regionUrl);
     const responseData = post.data.data.children[0].data;
     /** needed to forward one page */

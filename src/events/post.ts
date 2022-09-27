@@ -1,5 +1,5 @@
 import ClientEvent from "../components/ClientEvent";
-import { APIEmbedField, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 import { Response } from "../types/PostResponse";
 import { EmbedBuilder } from "discord.js";
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
@@ -10,7 +10,6 @@ export default new ClientEvent(
   "post",
   async (client, post: Response, newPost: Boolean) => {
     try {
-      console.log(newPost);
       // const milliseconds = post.created * 1000;
       // const created = new Date(milliseconds).toString();
       // const fields: APIEmbedField[] = [{ name: post.title, value: post.postUrl }];
@@ -39,18 +38,18 @@ export default new ClientEvent(
             .setStyle(ButtonStyle.Link)
         );
 
-      await channel?.send({
+      const message = await channel?.send({
         embeds: [embed],
         components: [row],
       });
-      console.log(post);
+
+      if (post.flair === "Expired :table_flip:" || post.flair === "Expired") {
+        await message.reply("**Expired (╯°□°)╯︵ ┻━┻ **");
+      }
+      console.log(`\nSent link ↩️ ${channel.id}`);
+      console.info("\n", post);
     } catch (err) {
       console.error(err);
     }
   }
 );
-
-// const savePostId = async (file: any, id: any, path: any) => {
-//   await file.ids.push(id);
-//   await fs.writeFile(file);
-// };

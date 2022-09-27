@@ -19,6 +19,9 @@ export default new ClientEvent("interactionCreate", async (client, int) => {
 
     await int.channel?.sendTyping();
     await command.run(client, int);
+    console.log(
+      `\n${int.user.username}#${int.user?.discriminator} used the ${int.commandName} slash command`
+    );
   } catch (err) {
     console.error(err);
 

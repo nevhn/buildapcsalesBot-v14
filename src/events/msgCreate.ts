@@ -32,6 +32,9 @@ export default new ClientEvent("messageCreate", async (client, message) => {
 
     await message.channel.sendTyping();
     await cmd.run(client, message, args);
+    console.log(
+      `\n${message.author.username}#${message.author?.discriminator} used the ${command} command`
+    );
   } catch (err) {
     console.log(err);
     // @ts-ignore

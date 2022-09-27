@@ -1,15 +1,15 @@
-import setPresence from "../components/setPresence";
-import ClientEvent from "../components/ClientEvent";
+import fs from "fs-extra";
+import cron from "node-cron";
 import { ActivityType } from "discord.js";
 import config from "../config/config";
+import setPresence from "../components/setPresence";
+import ClientEvent from "../components/ClientEvent";
 import { Post } from "../components/Post";
-import cron from "node-cron";
-import fs from "fs-extra";
 
 export default new ClientEvent("ready", async (client) => {
   console.clear();
   console.log(
-    `${client.user?.username}#${client.user?.discriminator} is online!`
+    `🟢${client.user?.username}#${client.user?.discriminator} is online!`
   );
 
   new setPresence(client, [
@@ -38,9 +38,9 @@ export default new ClientEvent("ready", async (client) => {
     try {
       let newUsPost = false;
       let newUkPost = false;
+
       const post1 = new Post("usa");
       const post2 = new Post("uk");
-
       const usPost = await post1.getPost();
       const ukPost = await post2.getPost();
 
@@ -50,20 +50,29 @@ export default new ClientEvent("ready", async (client) => {
       if (!previousPosts.ids.length) {
         previousPosts.ids.push(usPost.id);
         previousPosts.ids.push(ukPost.id);
+
         await fs.writeJSON(file, previousPosts);
-        console.log(previousPosts);
+
+        console.info("\n⚙️Initialed json file");
+
         newUsPost = true;
         newUkPost = true;
       }
 
       // replace new id
-      if (previousPosts.ids[0] != usPost.id) {
+      if (previousPosts.ids[0] !== usPost.id) {
         previousPosts.ids[0] = usPost.id;
+
+        await fs.writeJSON(file, previousPosts);
+
         newUsPost = true;
       }
 
-      if (previousPosts.ids[1] != ukPost.id) {
+      if (previousPosts.ids[1] !== ukPost.id) {
         previousPosts.ids[1] = ukPost.id;
+
+        await fs.writeJSON(file, previousPosts);
+
         newUkPost = true;
       }
 
@@ -74,6 +83,16 @@ export default new ClientEvent("ready", async (client) => {
     }
   };
 
-  cron.schedule("* * * * *", async () => await fetchPost());
+  cron.schedule("* * * * *", async () => {
+    const now = new Date().toLocaleDateString("en-us", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+
+    console.log(`\n⏱️Hit Reddit API: ${now}`);
+
+    await fetchPost();
+  });
   // fetchPost();
 });
