@@ -3,6 +3,7 @@ import axios from "axios";
 
 export class Post {
   public readonly regionUrl!: string;
+  public readonly baseUrl = "https://reddit.com";
 
   public constructor(region: string) {
     switch (region) {
@@ -19,21 +20,51 @@ export class Post {
     }
   }
 
-  public async getPost(): Promise<Response> {
-    const baseUrl = "https://reddit.com";
-    const post = await axios.get(this.regionUrl);
-    const responseData = post.data.data.children[0].data;
-    /** needed to forward one page */
-    // const afterId = post.data.data.after
+  public async getPost(): Promise<Response | void> {
+    try {
+      const response = await axios.get(this.regionUrl);
+      const post = response.data.data.children[0].data;
+      const afterId = response.data.data.after;
+      const previousPost = (await this.getPreviousPost(afterId)) as Response;
 
-    return {
-      subreddit: responseData.subreddit,
-      id: responseData.id,
-      title: responseData.title,
-      created: responseData.created, // Date()
-      flair: responseData.link_flair_text,
-      buyUrl: responseData.url_overridden_by_dest,
-      postUrl: baseUrl + responseData.permalink,
-    };
+      return {
+        subreddit: post.subreddit,
+        id: post.id,
+        previousPost,
+        title: post.title,
+        created: post.created_utc,
+        flair: post.link_flair_text,
+        buyUrl: post.url_overridden_by_dest,
+        postUrl: this.baseUrl + post.permalink,
+      };
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  public async getPreviousPost(
+    currentAfterId: string
+  ): Promise<Response | void> {
+    try {
+      const response = await axios.get(
+        this.regionUrl + `&after=${currentAfterId}`
+      );
+      const post = response.data.data.children[0].data;
+      const afterId = response.data.data.after;
+      // const previousPost = (await this.getPreviousPost(afterId)) as Response;
+
+      return {
+        subreddit: post.subreddit,
+        id: post.id,
+        afterId,
+        title: post.title,
+        created: post.created_utc,
+        flair: post.link_flair_text,
+        buyUrl: post.url_overridden_by_dest,
+        postUrl: this.baseUrl + post.permalink,
+      };
+    } catch (err) {
+      console.error(err);
+    }
   }
 }

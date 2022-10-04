@@ -1,29 +1,54 @@
-import ClientEvent from "../components/ClientEvent";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { TextChannel } from "discord.js";
-import { Response } from "../types/PostResponse";
 import { EmbedBuilder } from "discord.js";
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import config from "../config/config";
+import ClientEvent from "../components/ClientEvent";
+import { Response } from "../types/PostResponse";
+
+/**dayjs config */
+dayjs.extend(utc);
+dayjs.extend(timezone);
+const usTz = "America/New_York";
+const ukTz = "Europe/London";
+const timeFormat = "ddd, D MMMM YYYY hh:mm:ss A";
 
 export default new ClientEvent(
   //@ts-ignore
   "post",
-  async (client, post: Response, newPost: Boolean) => {
+  async (client, post: Response, isPostNew: Boolean) => {
     try {
-      // const milliseconds = post.created * 1000;
-      // const created = new Date(milliseconds).toString();
-      // const fields: APIEmbedField[] = [{ name: post.title, value: post.postUrl }];
-      let channelId = "";
+      if (!isPostNew) return;
+      console.log(post);
 
-      if (!newPost) return;
+      /**  convert post timestamp to unix time */
+      const unixTimestamp = dayjs.unix(post.created);
 
-      if (post.subreddit === "buildapcsales")
+      let timestamp;
+      let channelId;
+
+      /** setting up the post for the proper discord channel */
+      if (post.subreddit === "buildapcsales") {
         channelId = config.usChannelId as string;
-      else channelId = config.ukChannelId as string;
+        /**Setting correct timezone */
+        timestamp = dayjs(unixTimestamp).tz(usTz);
+        timestamp = timestamp.format(timeFormat); //dd, d, M, y
+      } else {
+        channelId = config.ukChannelId as string;
+        timestamp = dayjs(unixTimestamp).tz(ukTz);
+        timestamp = timestamp.format(timeFormat);
+      }
+
+      // const fields: APIEmbedField[] = [{ name: post.title, value: post.postUrl }];
 
       const channel = client.channels.cache.get(channelId) as TextChannel;
 
-      const embed = new EmbedBuilder().setTitle(post.title).setColor("Random");
+      const embed = new EmbedBuilder()
+        .setTitle(post.title)
+        .setColor("Random")
+        .setFooter({ text: `Posted on ${timestamp}` });
       const row = new ActionRowBuilder<ButtonBuilder>()
         .addComponents(
           new ButtonBuilder()
@@ -42,12 +67,12 @@ export default new ClientEvent(
         embeds: [embed],
         components: [row],
       });
-
-      if (post.flair === "Expired :table_flip:" || post.flair === "Expired") {
+      /**If post has the expired tag(flair) reply with a message */
+      if (post?.flair === "Expired :table_flip:" || post?.flair === "Expired") {
         await message.reply("**Expired (╯°□°)╯︵ ┻━┻ **");
       }
+      // console.log("post", post);
       console.log(`\nSent link ↩️ ${channel.id}`);
-      console.info("\n", post);
     } catch (err) {
       console.error(err);
     }

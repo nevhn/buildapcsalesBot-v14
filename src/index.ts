@@ -11,11 +11,13 @@ const client = new Client({
 
 import config from "./config/config";
 import handler from "./handler/handler";
+import postHandler from "./handler/postHandler";
 
 const commands = new Collection();
 const slashes = new Collection();
 
 handler(client);
+postHandler(client);
 
 client.login(config.token);
 
