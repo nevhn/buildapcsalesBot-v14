@@ -6,7 +6,7 @@ import ClientEvent from "../components/ClientEvent";
 export default new ClientEvent("ready", async (client) => {
   // console.clear();
   console.log(
-    `${client.user?.username}#${client.user?.discriminator} is online!`
+    `\n${client.user?.username}#${client.user?.discriminator} is online!\n`
   );
 
   new setPresence(client, [

@@ -20,8 +20,10 @@ export default new ClientEvent(
   "post",
   async (client, post: Response, isPostNew: Boolean) => {
     try {
+      // console.log("isPostNew: ", isPostNew);
+      console.log(dayjs().format(timeFormat));
+
       if (!isPostNew) return;
-      console.log(post);
 
       /**  convert post timestamp to unix time */
       const unixTimestamp = dayjs.unix(post.created);
@@ -71,8 +73,8 @@ export default new ClientEvent(
       if (post?.flair === "Expired :table_flip:" || post?.flair === "Expired") {
         await message.reply("**Expired (╯°□°)╯︵ ┻━┻ **");
       }
-      // console.log("post", post);
-      console.log(`\nSent link ↩️ ${channel.id}`);
+      console.log("\n", post);
+      console.log(`\nSent link ↩️ ${channelId}`);
     } catch (err) {
       console.error(err);
     }

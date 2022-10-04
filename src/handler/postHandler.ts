@@ -2,11 +2,16 @@ import fs from "fs-extra";
 import { Client } from "discord.js";
 import { Subreddit } from "../components/BuildAPCSales";
 
-export default async (client: Client) => {
+export default (client: Client) => {
+  setInterval(postHandler, 1000, client);
+};
+
+const postHandler = async (client: Client) => {
   try {
     const subreddit = new Subreddit(process.env.ACCESS_TOKEN as string);
 
     const posts = await subreddit.fetchPosts();
+    console.log("");
 
     let isPostNew,
       isUKPostNew = false;
@@ -35,13 +40,3 @@ export default async (client: Client) => {
     console.error(err);
   }
 };
-
-// cron.schedule("* * * * *", async () => {
-//   /**TODO:
-//    *  replace this with date module
-//    */
-//   const now = new Date().toLocaleDateString("en-us", {
-//     hour: "numeric",
-//     minute: "numeric",
-//     hour12: true,
-//   });
