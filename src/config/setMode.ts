@@ -17,7 +17,13 @@ function setMode(mode: "development" | "production") {
     CHANNEL2_ID = "878014127803605003";
   }
 
-  return { TOKEN, CLIENT_ID, GUILD_ID, CHANNEL1_ID, CHANNEL2_ID };
+  return {
+    TOKEN,
+    CLIENT_ID,
+    GUILD_ID,
+    CHANNEL1_ID,
+    CHANNEL2_ID,
+  };
 }
 
 export default setMode;

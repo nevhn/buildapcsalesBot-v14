@@ -21,7 +21,9 @@ export default new ClientEvent(
   async (client, post: Response, isPostNew: Boolean) => {
     try {
       // console.log("isPostNew: ", isPostNew);
-      console.log(dayjs().format(timeFormat));
+      console.log(
+        `[${post.subreddit}] checked at ${dayjs().format(timeFormat)}`
+      );
 
       if (!isPostNew) return;
 
@@ -74,7 +76,7 @@ export default new ClientEvent(
         await message.reply("**Expired (╯°□°)╯︵ ┻━┻ **");
       }
       console.log("\n", post);
-      console.log(`\nSent link ↩️ ${channelId}`);
+      console.log(`\nSent link ↩️ ${post.subreddit} ${channelId}`);
     } catch (err) {
       console.error(err);
     }

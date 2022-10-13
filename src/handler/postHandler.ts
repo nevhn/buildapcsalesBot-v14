@@ -1,23 +1,22 @@
 import fs from "fs-extra";
 import { Client } from "discord.js";
 import { Subreddit } from "../components/BuildAPCSales";
-
+import setRedditToken from "../config/setRedditToken";
 export default (client: Client) => {
-  setInterval(postHandler, 1000, client);
+  setInterval(postHandler, 1000, client); //1000
 };
 
 const postHandler = async (client: Client) => {
   try {
-    const subreddit = new Subreddit(process.env.ACCESS_TOKEN as string);
-
+    const accessToken = (await setRedditToken()) as string;
+    const subreddit = new Subreddit(accessToken);
     const posts = await subreddit.fetchPosts();
-    console.log("");
 
     let isPostNew,
       isUKPostNew = false;
 
     /** {currentIds : []}  */
-    const file = "dist/config/ids.json";
+    const file = "dist/config/reddit.json";
     const cached = await fs.readJSON(file);
 
     /** new post : replace with new id */

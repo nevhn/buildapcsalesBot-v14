@@ -3,9 +3,18 @@ import { readdir } from "node:fs/promises";
 import { commands, slashes } from "..";
 import { Client } from "discord.js";
 import { join } from "node:path";
+import fs from "fs-extra";
 
 export default async (client: Client) => {
   try {
+    const redditConfig = {
+      token: "",
+      currentIds: [],
+    };
+
+    await fs.writeJSON("./dist/config/reddit.json", redditConfig);
+    console.log("\nGenerated reddit config file.");
+
     /*-------- Nota: use Slash Commands --------*/
     // Command Handler
     const commandFiles = await readdir(join(__dirname, "../commands/cmd"));
