@@ -73,7 +73,7 @@ export default new ClientEvent(
       });
       /**If post has the expired tag(flair) reply with a message */
       if (post?.flair === "Expired :table_flip:" || post?.flair === "Expired") {
-        await message.reply("**Expired (╯°□°)╯︵ ┻━┻ **");
+        await message.reply("Sale expired (╯°□°)╯︵ ┻━┻");
       }
       console.log("\n", post);
       console.log(`\nSent link ↩️ ${post.subreddit} ${channelId}`);

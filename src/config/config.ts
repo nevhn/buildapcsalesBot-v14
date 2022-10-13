@@ -4,7 +4,7 @@ import setMode from "./setMode";
 config();
 
 const { CLIENT_ID, GUILD_ID, TOKEN, CHANNEL1_ID, CHANNEL2_ID } =
-  setMode("development");
+  setMode("production");
 
 export default {
   token: TOKEN,
