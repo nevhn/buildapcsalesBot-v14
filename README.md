@@ -1,6 +1,6 @@
 # buildapcsalesBot-v14
 
-A Discord Bot that fetches new posts from the buildapcsales/buildapcsalesUK subreddit. Written in TypeScript using the [Discord.js](https://github.com/discordjs/discord.js/tree/main/apps/website) module.
+A Discord Bot that keeps you updated with the latest deals and posts from the buildapcsales and buildapcsales UK subreddits. Written in TypeScript using the [Discord.js](https://github.com/discordjs/discord.js/tree/main/apps/website) module.
 
 ## Requirements
 
