@@ -2,6 +2,9 @@
 
 A Discord Bot that keeps you updated with the latest deals and posts from the buildapcsales and buildapcsales UK subreddits. Written in TypeScript using the [Discord.js](https://github.com/discordjs/discord.js/tree/main/apps/website) module.
 
+## Screenshot
+(![image](https://user-images.githubusercontent.com/51008990/222940223-d626fc29-6964-4ad0-b642-c04910fde153.png)
+
 ## Requirements
 
 - [Discord.js v14](https://github.com/discordjs/discord.js/tree/main/apps/website) requires Node.js v16.9 or higher to work
